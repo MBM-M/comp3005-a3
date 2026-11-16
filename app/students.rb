@@ -1,8 +1,3 @@
-# frozen_string_literal: true
-
-# students.rb - CRUD app for the students table in PostgreSQL.
-# Run "ruby app/students.rb" for a menu. Needs the DB_PASSWORD environment variable.
-
 require 'pg'
 
 # Database connection settings.
@@ -11,7 +6,7 @@ DB_CONFIG = {
   port: 5432,
   dbname: 'student_db',
   user: 'postgres',
-  # Password comes from the DB_PASSWORD environment variable, not the code.
+  # Password comes from the DB_PASSWORD environment variable
   password: ENV.fetch('DB_PASSWORD'),
 }.freeze
 
@@ -23,20 +18,15 @@ rescue PG::ConnectionBad => e
   exit 1
 end
 
-# CRUD functions. Each one opens a connection, runs one query, and closes it in ensure.
-# Values go in as $1, $2... so user input can't change the SQL. Statements autocommit.
-
 # READ (getAllStudents): show all students.
 def get_all_students
   conn = connect
   result = conn.exec('SELECT * FROM students ORDER BY student_id')
 
-  # Header, then one line per student.
   layout = '%-4s %-12s %-12s %-26s %s'
   puts format(layout, 'ID', 'First', 'Last', 'Email', 'Enrolled')
   result.each do |row|
-    puts format(layout, row['student_id'], row['first_name'], row['last_name'],
-                row['email'], row['enrollment_date'])
+    puts format(layout, row['student_id'], row['first_name'], row['last_name'], row['email'], row['enrollment_date'])
   end
 rescue PG::Error => e
   puts "Error reading students: #{e.message}"
@@ -69,7 +59,6 @@ def update_student_email(student_id, new_email)
     [new_email, student_id]
   )
 
-  # 0 rows changed = id not found.
   if result.cmd_tuples.zero?
     puts "No student found with id #{student_id}."
   else
@@ -115,7 +104,7 @@ def main_menu
     puts '5. Quit'
     print 'Choose an option: '
     input = gets
-    break if input.nil? # stdin closed
+    break if input.nil?
 
     case input.chomp
     when '1'
@@ -141,5 +130,5 @@ def main_menu
   end
 end
 
-# Run the menu only when this file is run directly.
+
 main_menu if __FILE__ == $PROGRAM_NAME
