@@ -5,7 +5,7 @@ Create, Read, Update and Delete (CRUD) operations on a `students` table.
 
 ## Demo Video
 
-TODO: paste the video link here.
+https://youtu.be/1-tEiuoaNZI
 
 ## Project Structure
 
